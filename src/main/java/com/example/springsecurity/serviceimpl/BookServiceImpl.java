@@ -22,4 +22,11 @@ public class BookServiceImpl implements BookService{
 		return booksList;
 	}
 
+	@Override
+	public Book getBookById(Long id) {
+		// TODO Auto-generated method stub
+		Book book = booksRepository.getOne(id);
+		return book;
+	}
+
 }

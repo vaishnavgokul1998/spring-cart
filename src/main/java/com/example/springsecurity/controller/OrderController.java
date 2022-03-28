@@ -12,13 +12,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.springsecurity.models.Book;
-import com.example.springsecurity.models.Cart;
 import com.example.springsecurity.models.Response;
 import com.example.springsecurity.models.ResponseCode;
 import com.example.springsecurity.models.User;
 import com.example.springsecurity.repository.BooksRepository;
 import com.example.springsecurity.repository.UserRepository;
-import com.example.springsecurity.requestVO.CartRequestVo;
 import com.example.springsecurity.requestVO.OrderRequestVO;
 import com.example.springsecurity.utilities.KeyWords;
 

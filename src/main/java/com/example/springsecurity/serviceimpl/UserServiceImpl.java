@@ -13,12 +13,12 @@ import org.springframework.stereotype.Component;
 import com.example.springsecurity.models.User;
 import com.example.springsecurity.repository.UserRepository;
 import com.example.springsecurity.requestVO.UserDetailVO;
-import com.example.springsecurity.services.AdminService;
+import com.example.springsecurity.services.UserService;
 import com.example.springsecurity.utilities.MailUtil;
 
 
 @Component
-public class AdminServiceImpl implements AdminService {
+public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private UserRepository userRepo;
@@ -83,6 +83,13 @@ public class AdminServiceImpl implements AdminService {
 	public boolean changeStatusValue(Long id) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public User findUserByEmail(String email) {
+		// TODO Auto-generated method stub
+		User user = userRepo.findUserByEmail(email);
+		return user;
 	}
 
 }

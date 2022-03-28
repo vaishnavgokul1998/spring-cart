@@ -10,4 +10,6 @@ import com.example.springsecurity.models.Book;
 public interface BookService {
   
 	List<Book> getBooksList();
+	
+	Book getBookById(Long id);
 }

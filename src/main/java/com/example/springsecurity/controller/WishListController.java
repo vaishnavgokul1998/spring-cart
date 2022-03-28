@@ -2,7 +2,6 @@ package com.example.springsecurity.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,23 +10,19 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.springsecurity.models.Book;
-import com.example.springsecurity.models.Cart;
 import com.example.springsecurity.models.Response;
 import com.example.springsecurity.models.ResponseCode;
 import com.example.springsecurity.models.User;
 import com.example.springsecurity.models.WishList;
-import com.example.springsecurity.repository.BooksRepository;
-import com.example.springsecurity.repository.UserRepository;
-import com.example.springsecurity.repository.WishListRepository;
-import com.example.springsecurity.requestVO.CartRequestVo;
-import com.example.springsecurity.requestVO.CartResponseVo;
 import com.example.springsecurity.requestVO.WishListResponse;
+import com.example.springsecurity.services.BookService;
+import com.example.springsecurity.services.UserService;
+import com.example.springsecurity.services.WishListService;
 import com.example.springsecurity.utilities.KeyWords;
 
 @RestController
@@ -35,13 +30,13 @@ import com.example.springsecurity.utilities.KeyWords;
 public class WishListController {
 
 	@Autowired
-	BooksRepository booksRepository;
+	BookService bookService;
 
 	@Autowired
-	UserRepository userRepository;
+	UserService userService;
 
 	@Autowired
-	WishListRepository wishListRepository;
+	WishListService wishListService;
 
 	@RequestMapping(value = "api/wishlist/getWishList", method = RequestMethod.GET)
 	public ResponseEntity<Response> getWishList() {
@@ -50,8 +45,8 @@ public class WishListController {
 		UserDetails usercheck = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String username = usercheck.getUsername();
 
-		User user = userRepository.findUserByEmail(username);
-		List<WishList> wishList = wishListRepository.findWishListByUser(user.getId());
+		User user = userService.findUserByEmail(username);
+		List<WishList> wishList = wishListService.findWishListByUser(user.getId());
 		
 		if (wishList != null && wishList.size() > 0) {
 			resCode.setCode(KeyWords.SUCCESS_CODE);
@@ -85,10 +80,10 @@ public class WishListController {
 		UserDetails usercheck = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String username = usercheck.getUsername();
 
-		User user = userRepository.findUserByEmail(username);
-		Book book = booksRepository.getOne(id);
+		User user = userService.findUserByEmail(username);
+		Book book = bookService.getBookById(id);
 
-		WishList wishlist = wishListRepository.findByWishList(user.getId(), book.getId());
+		WishList wishlist = wishListService.findByWishList(user.getId(), book.getId());
 		String message = "";
 		if (wishlist == null) {
 			wishlist = new WishList();
@@ -105,7 +100,7 @@ public class WishListController {
 			message = isLiked.equalsIgnoreCase("YES") ? "Book added to wishlist" : "Book removed from wishlist";
 		}
 
-		wishListRepository.saveAndFlush(wishlist);
+		wishListService.save(wishlist);
 		resCode.setCode(KeyWords.SUCCESS_CODE);
 		resCode.setStatus(KeyWords.SUCCESS);
 		resCode.setMessage(message);

@@ -1,7 +1,5 @@
 package com.example.springsecurity.requestVO;
 
-import java.math.BigDecimal;
-
 import com.example.springsecurity.models.Book;
 
 public class CartResponseVo {

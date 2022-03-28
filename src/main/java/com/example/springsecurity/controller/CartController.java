@@ -21,12 +21,11 @@ import com.example.springsecurity.models.Cart;
 import com.example.springsecurity.models.Response;
 import com.example.springsecurity.models.ResponseCode;
 import com.example.springsecurity.models.User;
-import com.example.springsecurity.repository.BooksRepository;
-import com.example.springsecurity.repository.CartRepository;
-import com.example.springsecurity.repository.UserRepository;
 import com.example.springsecurity.requestVO.CartRequestVo;
 import com.example.springsecurity.requestVO.CartResponseVo;
-import com.example.springsecurity.requestVO.LoginRequestVO;
+import com.example.springsecurity.services.BookService;
+import com.example.springsecurity.services.CartService;
+import com.example.springsecurity.services.UserService;
 import com.example.springsecurity.utilities.KeyWords;
 
 @RestController
@@ -34,14 +33,15 @@ import com.example.springsecurity.utilities.KeyWords;
 public class CartController {
 
 	@Autowired
-	BooksRepository booksRepository;
+	private BookService bookService;
 
 	@Autowired
-	UserRepository userRepository;
+	private UserService userService;
 
 	@Autowired
-	CartRepository cartRepository;
+	private CartService cartService;
 
+	
 	@RequestMapping(value = "api/cart/addBookToCart", method = RequestMethod.POST)
 	public ResponseEntity<Response> createAuthenticationToken(@RequestBody CartRequestVo cartReq) throws Exception {
 		Response res = new Response();
@@ -56,8 +56,8 @@ public class CartController {
 		UserDetails usercheck = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String username = usercheck.getUsername();
 
-		User user = userRepository.findUserByEmail(username);
-		Book book = booksRepository.getOne(cartReq.getBookId());
+		User user = userService.findUserByEmail(username);
+		Book book = bookService.getBookById(cartReq.getBookId());
 
 		if (user == null) {
 			resCode.setCode(KeyWords.BAD_REQUEST_CODE);
@@ -73,7 +73,7 @@ public class CartController {
 			res.setResponseCode(resCode);
 			return new ResponseEntity<Response>(res, HttpStatus.OK);
 		}
-		Cart cart = cartRepository.findByCart(user.getId(), book.getId());
+		Cart cart = cartService.findByUserIdAndBookId(user.getId(), book.getId());
 		if (cart == null) {
 			cart = new Cart();
 			cart.setBook(book);
@@ -97,7 +97,7 @@ public class CartController {
 
 		}
 
-		cartRepository.saveAndFlush(cart);
+		cartService.save(cart);
 		resCode.setCode(KeyWords.SUCCESS_CODE);
 		resCode.setStatus(KeyWords.SUCCESS);
 		resCode.setMessage("Book added to cart");
@@ -114,9 +114,9 @@ public class CartController {
 		UserDetails usercheck = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String username = usercheck.getUsername();
 
-		User user = userRepository.findUserByEmail(username);
+		User user = userService.findUserByEmail(username);
 
-		List<Cart> cartList = cartRepository.findByUser(user.getId());
+		List<Cart> cartList = cartService.findByUserId(user.getId());
 
 		if (cartList == null || cartList.size() == 0) {
 			resCode.setCode(KeyWords.BAD_REQUEST_CODE);
@@ -148,14 +148,14 @@ public class CartController {
 		Response res = new Response();
 		ResponseCode resCode = new ResponseCode();
 
-		Optional<Cart> cart = cartRepository.findById(id).map(response -> {
+		Optional<Cart> cart = cartService.findById(id).map(response -> {
 			if(response.getStatus().equalsIgnoreCase("A")) {
 				response.setQuantity(cartReq.getQuantity());
 				resCode.setCode(KeyWords.SUCCESS_CODE);
 			}else {
 				resCode.setCode(KeyWords.FAILURE_CODE);
 			}
-			return cartRepository.save(response);
+			return cartService.save(response);
 		});
 
 		if (cart == null || cart.isPresent() == false || resCode.getCode() == KeyWords.FAILURE_CODE) {
@@ -177,14 +177,14 @@ public class CartController {
 		Response res = new Response();
 		ResponseCode resCode = new ResponseCode();
 				
-		Optional<Cart> cart = cartRepository.findById(id).map( response ->{
+		Optional<Cart> cart = cartService.findById(id).map( response ->{
 			if(response.getStatus().equalsIgnoreCase("A")) {
 				response.setStatus("C");
 				resCode.setCode(KeyWords.SUCCESS_CODE);
 			}else {
 				resCode.setCode(KeyWords.FAILURE_CODE);
 			}
-			return cartRepository.save(response);
+			return cartService.save(response);
 		});
 		
 		if(cart == null || cart.isPresent() == false) {

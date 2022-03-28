@@ -1,24 +1,18 @@
 package com.example.springsecurity.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.springsecurity.models.Book;
-import com.example.springsecurity.models.Cart;
 import com.example.springsecurity.models.Response;
 import com.example.springsecurity.models.ResponseCode;
-import com.example.springsecurity.repository.BooksRepository;
-import com.example.springsecurity.requestVO.CartRequestVo;
 import com.example.springsecurity.services.BookService;
 import com.example.springsecurity.utilities.KeyWords;
 
@@ -29,8 +23,6 @@ public class BookController {
 	@Autowired
 	private BookService bookService;
 
-	@Autowired
-	private BooksRepository booksRepository;
 
 	@RequestMapping(value = "api/books/getBooks", method = RequestMethod.GET)
 	public ResponseEntity<Response> getAllBooksList() {

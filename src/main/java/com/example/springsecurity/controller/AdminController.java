@@ -18,7 +18,7 @@ import com.example.springsecurity.models.ResponseCode;
 import com.example.springsecurity.models.User;
 import com.example.springsecurity.repository.UserRepository;
 import com.example.springsecurity.requestVO.UserDetailVO;
-import com.example.springsecurity.services.AdminService;
+import com.example.springsecurity.services.UserService;
 import com.example.springsecurity.utilities.KeyWords;
 
 @RestController
@@ -26,7 +26,7 @@ import com.example.springsecurity.utilities.KeyWords;
 public class AdminController {
 
 	@Autowired
-	private AdminService adminService;
+	private UserService adminService;
 	
 	@Autowired
 	private UserRepository userRepository;
