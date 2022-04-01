@@ -92,4 +92,10 @@ public class UserServiceImpl implements UserService {
 		return user;
 	}
 
+	@Override
+	public void save(User user) {
+		// TODO Auto-generated method stub
+		userRepo.saveAndFlush(user);
+	}
+
 }

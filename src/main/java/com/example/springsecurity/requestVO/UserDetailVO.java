@@ -12,7 +12,6 @@ public class UserDetailVO {
 	
 	private String dob;
 	
-	private String jwtToken;
 	
 	private String role;
 	
@@ -23,6 +22,8 @@ public class UserDetailVO {
 	private String designation;
 	
 	private Date memberJoinDate;
+	
+	private AddressVo address;
 
 
 	public UserDetailVO() {
@@ -30,14 +31,13 @@ public class UserDetailVO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public UserDetailVO(Long id,String userName, String email, String mobileNo, String dob, String jwtToken, String role,
+	public UserDetailVO(Long id,String userName, String email, String mobileNo, String dob, String role,
 			String status,String designation,Date joinDate) {
 		super();
 		this.userName = userName;
 		this.email = email;
 		this.mobileNo = mobileNo;
 		this.dob = dob;
-		this.jwtToken = jwtToken;
 		this.role = role;
 		this.status = status;
 		this.id = id.toString();
@@ -45,13 +45,6 @@ public class UserDetailVO {
 		this.memberJoinDate = joinDate;
 	}
 
-	public String getJwtToken() {
-		return jwtToken;
-	}
-
-	public void setJwtToken(String jwtToken) {
-		this.jwtToken = jwtToken;
-	}
 
 	public String getUserName() {
 		return userName;
@@ -123,6 +116,14 @@ public class UserDetailVO {
 
 	public void setMemberJoinDate(Date memberJoinDate) {
 		this.memberJoinDate = memberJoinDate;
+	}
+
+	public AddressVo getAddress() {
+		return address;
+	}
+
+	public void setAddress(AddressVo address) {
+		this.address = address;
 	}
 	
 

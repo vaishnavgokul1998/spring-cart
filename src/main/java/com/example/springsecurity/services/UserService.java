@@ -19,4 +19,6 @@ public interface UserService {
 	boolean changeStatus(Long id);
 	
 	boolean changeStatusValue(Long id);
+	
+	void save(User user);
 }

@@ -25,21 +25,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.springsecurity.Security.JwtTokenUtil;
 import com.example.springsecurity.exceptions.InvalidInputException;
+import com.example.springsecurity.models.LoginDetails;
 import com.example.springsecurity.models.Response;
 import com.example.springsecurity.models.ResponseCode;
 import com.example.springsecurity.models.User;
 import com.example.springsecurity.repository.UserRepository;
 import com.example.springsecurity.requestVO.LoginRequestVO;
-import com.example.springsecurity.requestVO.UserDetailVO;
 import com.example.springsecurity.requestVO.UserRegistrationRequest;
 import com.example.springsecurity.utilities.KeyWords;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 public class LoginController {
+	
+	public static final long JWT_TOKEN_VALIDITY = 60 * 60;
 
 	@Autowired
 	private UserRepository userRepository;
+	
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -116,13 +119,11 @@ public class LoginController {
 			claims.put("email", auth.getName());
 			final String token = jwtTokenUtil.generateToken(auth.getName(), claims);
 			resCode.setMessage("Login Successfully");
-			User userDetails = userRepository.findUserByEmail(authenticationRequest.getEmail());
-
-			UserDetailVO userDetailVo = new UserDetailVO(userDetails.getId() ,userDetails.getUserName(), userDetails.getEmail(),
-					userDetails.getMobileNo(), userDetails.getDob().toString(), token,userDetails.getRole(),
-					userDetails.getStatus(),userDetails.getDesignation(),userDetails.getCreatedDate());
-			res.setResponseBody(userDetailVo);
-
+            LoginDetails obj = new LoginDetails();
+            obj.setJwtToken(token);
+            obj.setLoginTime(new Date());          
+            obj.setExpiredTime(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000));
+            res.setResponseBody(obj);
 		}
 
 		res.setResponseCode(resCode);
